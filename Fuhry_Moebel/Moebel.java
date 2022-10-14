@@ -13,9 +13,13 @@ public class Moebel
     private int posY;
     private int gewicht;
     private boolean beweglich;
+    private int roomLength;
+    private int roomWidth;
 
     public Moebel()
     {
+        setRoomLength(500);
+        setRoomWidth(400);
         setBezeichnung("Kasten");
         setLaenge(70);
         setBreite(50);
@@ -25,15 +29,17 @@ public class Moebel
         setBeweglich(true);
     }
     
-    public Moebel(String bezeichnung, int laenge, int breite, int posX, int posY, int gewicht, boolean bewglich)
+    public Moebel(String bezeichnung, int laenge, int breite, int posX, int posY, int gewicht, boolean beweglich, int roomLength, int roomWidth)
     {
-        setBezeichnung("Kasten");
-        setLaenge(70);
-        setBreite(50);
-        setPosX(0);
-        setPosY(0);
-        setGewicht(10);
-        setBeweglich(true);
+        setRoomLength(roomLength);
+        setRoomWidth(roomWidth);
+        setBezeichnung(bezeichnung);
+        setLaenge(laenge);
+        setBreite(breite);
+        setPosX(posX);
+        setPosY(posY);
+        setGewicht(gewicht);
+        setBeweglich(beweglich);
     }
     
     public String getBezeichnung() {
@@ -62,6 +68,14 @@ public class Moebel
     
     public boolean getBeweglich() {
         return beweglich;
+    }
+    
+    public int getRoomLength() {
+        return roomLength;
+    }
+    
+    public int getRoomWidth() {
+        return roomWidth;
     }
     
     public void setBezeichnung(String bezeichnungNeu) {
@@ -93,7 +107,7 @@ public class Moebel
     
     public void setPosX(int posXNeu) {
         if(posXNeu >= 0) {
-            if((posXNeu + laenge) - 500 <= 0) {
+            if((posXNeu + laenge) - roomLength <= 0) {
                 posX = posXNeu;
             }
             else {
@@ -107,7 +121,7 @@ public class Moebel
     
     public void setPosY(int posYNeu) {
         if(posYNeu >= 0) {
-            if(posYNeu + breite <= 400) {
+            if(posYNeu + breite <= roomWidth) {
                 posY = posYNeu;
             }
             else {
@@ -132,16 +146,27 @@ public class Moebel
         beweglich = beweglichNeu;
     }
     
-    public void verschieben(int umX, int umY) {
-        if(beweglich == true) {
-            if(posX + laenge + umX <= 500 && posX - umX <= 0) {
-                posX = posX + umX;
-            }
-            else {
-                System.out.println("verschieben: invalid move");
-            }
-            if(posY + breite + umY <= 400 && posY - umY <= 0) {
-                posY = posY + umY;
+    public void setRoomLength(int roomLengthNew) {
+        if(roomLengthNew >= laenge) {
+            roomLength = roomLengthNew;
+        } else {
+            System.out.println("setRoomLenght: room can't be smaller than Moebel");
+        }
+    }
+    
+    public void setRoomWidth(int roomWidthNew) {
+        if(roomWidthNew >= breite) {
+            roomWidth = roomWidthNew;
+        } else {
+            System.out.println("setRoomWidth: room can't be smaller than Moebel");
+        }
+    }
+    
+    public void verschiebe(int umX, int umY) {
+        if(beweglich) {
+            if(posX + laenge + umX <= roomLength && posX + umX >= 0 && posY + breite + umY <= roomWidth && posY + umY >= 0) {
+                setPosX(posX + umX);
+                setPosY(posY + umY);
             }
             else {
                 System.out.println("verschieben: invalid move");
@@ -150,6 +175,10 @@ public class Moebel
         else {
             System.out.println("verschieben: Moebel not beweglich");
         }
+    }
+    
+    public void showRoomSize() {
+        System.out.println("Room lenght: " + roomLength + ", room width: " + roomWidth);
     }
     
     public String toString() {
